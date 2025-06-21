@@ -386,22 +386,17 @@ export default function MainCountStock() {
         <div className="card">
           <div className="container-title pad-main !items-center">
             <p className="text-3xl">ข้อมูลชั้นใน</p>
-            <div className="flex justify-end gap-x-5 w-full sm:w-fit">
+            <div className="flex flex-wrap justify-between gap-x-5 w-full sm:w-fit">
               <button onClick={() => setIsOpenForm({ isOpenSale: false, isOpenSummary: true })} type="button" className="btn-excel !bg-green-700">
-                เพิ่มข้อมูลสรุปยอด
+                เพิ่มสรุปยอด
               </button>
               <button onClick={() => setIsOpenForm({ isOpenSale: true, isOpenSummary: false })} type="button" className="btn-excel !bg-blue-700">
-                เพิ่มข้อมูลยอดขาย
+                เพิ่มยอดขาย
               </button>
             </div>
           </div>
 
-          <div className="pad-main !mt-3">
-            <button className="btn-excel" onClick={exportExcelFile}>
-              <i className="fa-solid fa-file-excel text-xl"></i>
-            </button>
-          </div>
-          <ShowData dataTable={dataTable} />
+          <ShowData dataTable={dataTable} exportExcelFile={exportExcelFile} />
         </div>
       )}
     </Fragment>
