@@ -1,0 +1,119 @@
+@import "./header.css";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  /* margin: 0;
+  display: flex;
+  width: 100%;
+   place-items: center;
+  min-width: 320px;
+  min-height: 100vh; */
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.pad-main {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.pad-top-main {
+  padding-top: 10px;
+}
+
+.pad-button-top-main {
+  padding-top: 20px;
+}
+
+.container-title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+}
+
+.btn-excel {
+  border-radius: 10px;
+  padding: 6px 16px;
+  background-color: green;
+}
+
+.btn-add {
+  border-radius: 10px;
+  padding: 6px 16px;
+  background-color: rgb(14, 82, 200);
+}
+
+.btn-remove {
+  border-radius: 10px;
+  padding: 6px 16px;
+  background-color: rgb(189, 36, 36);
+}
+
+.container-button {
+  display: flex;
+  gap: 10px;
+}
+
+.text-select {
+  width: 100%;
+  border: 2px;
+  border-color: white;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #3d44c5;
+}
+
+.container-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .container-flex {
+    flex-direction: column;
+    align-items: start;
+  }
+}
