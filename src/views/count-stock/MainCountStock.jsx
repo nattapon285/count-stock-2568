@@ -376,6 +376,33 @@ export default function MainCountStock() {
     });
   };
 
+  const onDeleteItem = ({ itemCode, index, rowIndex }) => {
+    // ลบใน dataTable
+    const newTable = [...dataTable];
+    newTable.splice(index, 1);
+    setDataTable(newTable);
+
+    // reset ค่าใน dataRows
+    const newDataRows = { ...dataRows };
+    console.log("rowIndex", rowIndex);
+
+    const resetRow = (rows) =>
+      rows.map((row) => {
+        if (row[0] === itemCode) {
+          const newRow = [...row];
+          newRow[rowIndex] = 0;
+          return newRow;
+        }
+        return row;
+      });
+
+    newDataRows.rows1 = resetRow(newDataRows.rows1);
+    newDataRows.rows2 = resetRow(newDataRows.rows2);
+    newDataRows.rows3 = resetRow(newDataRows.rows3);
+
+    setDataRows(newDataRows);
+  };
+
   return (
     <Fragment>
       {isOpenForm.isOpenSale ? (
@@ -395,8 +422,7 @@ export default function MainCountStock() {
               </button>
             </div>
           </div>
-
-          <ShowData dataTable={dataTable} exportExcelFile={exportExcelFile} />
+          <ShowData dataTable={dataTable} exportExcelFile={exportExcelFile} onDeleteItem={onDeleteItem} />
         </div>
       )}
     </Fragment>

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import DataDate from "../../helpers/DataDate.json";
 
 ShowData.propTypes = {
   dataTable: PropTypes.array.isRequired,
   exportExcelFile: PropTypes.func,
+  onDeleteItem: PropTypes.func.isRequired, // เพิ่มตรงนี้
 };
 
-export default function ShowData({ dataTable, exportExcelFile }) {
+export default function ShowData({ dataTable, exportExcelFile, onDeleteItem }) {
   const [loading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10); // กำหนดจำนวนแถวต่อหน้า (เปลี่ยนได้)
@@ -50,17 +52,18 @@ export default function ShowData({ dataTable, exportExcelFile }) {
           </button>
         </div>
       </div>
-
+      {console.log("currentData", currentData)}
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed" style={{ marginTop: "10px" }}>
           <thead>
             <tr className="bg-blue-700 text-white">
               <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[5%]">ลำดับ</th>
               <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[20%]">รหัส</th>
-              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[20%]">รายการ</th>
+              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[25%]">รายการ</th>
               <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[15%]">ราคา</th>
-              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[15%]">จำนวน</th>
-              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[25%]">เดือน</th>
+              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[10%]">จำนวน</th>
+              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[15%]">เดือน</th>
+              <th className="border border-gray-300 !p-3 text-center font-medium whitespace-nowrap w-[10%]">จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -68,7 +71,7 @@ export default function ShowData({ dataTable, exportExcelFile }) {
               <></>
             ) : dataTable?.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center text-red-500 bg-red-100 h-30">
+                <td colSpan={7} className="text-center text-red-500 bg-red-100 h-30">
                   <p className="text-xl"> 🕵️‍♂️ ไม่มีข้อมูลที่จะแสดง ณ ตอนนี้</p>
                 </td>
               </tr>
@@ -88,6 +91,11 @@ export default function ShowData({ dataTable, exportExcelFile }) {
                   </td>
                   <td className="border border-gray-300 !p-3 text-center">
                     <p>{item.createdAt}</p>
+                  </td>
+                  <td className="border border-gray-300 !p-3 text-center">
+                    <button type="button" onClick={() => onDeleteItem({ itemCode: item.code, index, rowIndex: DataDate.find((f) => f.mount === item.createdAt)?.index })}>
+                      <i class="fa-solid fa-trash-can text-red-500"></i>
+                    </button>
                   </td>
                 </tr>
               ))
