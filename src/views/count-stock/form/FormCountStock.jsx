@@ -1,7 +1,8 @@
 import { Field, FieldArray, Form, Formik } from "formik";
-import DataInner from "../../../helpers/DataInner.json";
+import dataInnerJSON from "../../../helpers/DataInner.json";
 import DataDate from "../../../helpers/DataDate.json";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 FormCountStock.propTypes = {
   onComeBack: PropTypes.func,
@@ -12,6 +13,32 @@ FormCountStock.propTypes = {
 };
 
 export default function FormCountStock({ setDataTable, dataRows, setDataRows, onComeBack }) {
+  const [customDataInner, setCustomDataInner] = useState(dataInnerJSON);
+  const [newCategory, setNewCategory] = useState("");
+  const [newCode, setNewCode] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleAddNewItem = () => {
+    const newItem = { code: newCode, name: newName, price: parseFloat(newPrice) };
+
+    setCustomDataInner((prev) => {
+      const existingCategory = prev.find((c) => c.category === newCategory);
+
+      if (existingCategory) {
+        return prev.map((c) => (c.category === newCategory ? { ...c, items: [...c.items, newItem] } : c));
+      } else {
+        return [...prev, { category: newCategory, items: [newItem] }];
+      }
+    });
+
+    setNewCategory("");
+    setNewCode("");
+    setNewName("");
+    setNewPrice("");
+  };
+
   return (
     <div className="card">
       <div className="container-title pad-main">
@@ -21,6 +48,31 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
         </button>
       </div>
       <div className="w-full h-px bg-white !my-6"></div>
+
+      <div className="pad-main mb-4" style={{ marginBottom: "10px" }}>
+        <label className="inline-flex items-center space-x-2">
+          <input type="checkbox" checked={showAddForm} onChange={() => setShowAddForm(!showAddForm)} className="form-checkbox text-blue-600" />
+          <span style={{ paddingLeft: "10px" }}>เพิ่มหมวดหมู่ + สินค้าใหม่</span>
+        </label>
+      </div>
+
+      {/* Form เพิ่มสินค้าใหม่ */}
+      {showAddForm && (
+        <div className="pad-main mb-6 bg-gray-700 p-6 rounded" style={{ padding: "20px" }}>
+          <h2 className="text-xl mb-2" style={{ marginBottom: "10px" }}>
+            เพิ่มหมวดหมู่ + สินค้าใหม่
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+            <input type="text" placeholder="หมวดหมู่" className="text-select" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+            <input type="text" placeholder="รหัสสินค้า" className="text-select" value={newCode} onChange={(e) => setNewCode(e.target.value)} />
+            <input type="text" placeholder="ชื่อสินค้า" className="text-select" value={newName} onChange={(e) => setNewName(e.target.value)} />
+            <input type="number" placeholder="ราคา" className="text-select" value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
+          </div>
+          <button className="btn-excel !bg-green-600 mt-2" style={{ marginTop: "10px" }} onClick={handleAddNewItem}>
+            เพิ่มลงคลัง
+          </button>
+        </div>
+      )}
 
       <Formik
         initialValues={{
@@ -32,7 +84,7 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
         onSubmit={(values) => {
           setDataTable((prev) => [
             ...values.items.map((v, idx) => {
-              const matchedCategory = DataInner.find((cat) => cat.items.some((item) => item.code === v.itemCode));
+              const matchedCategory = customDataInner.find((cat) => cat.items.some((item) => item.code === v.itemCode));
               const matchedItem = matchedCategory?.items.find((item) => item.code === v.itemCode);
 
               return {
@@ -47,7 +99,6 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
             ...prev,
           ]);
 
-          // อัปเดต dataRows ตาม itemCode ทีละตัว
           const { index, items } = values;
           const targetIndex = parseInt(index, 10);
           const updatedData = { ...dataRows };
@@ -67,7 +118,6 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
           });
 
           setDataRows(updatedData);
-
           onComeBack();
         }}
       >
@@ -103,10 +153,9 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
                 <div>
                   {values.items.map((item, index) => {
                     const selectedCategory = values.items[index].category;
-                    const productOptions = selectedCategory ? DataInner.find((cat) => cat.category === selectedCategory)?.items || [] : DataInner.flatMap((cat) => cat.items);
-
+                    const productOptions = selectedCategory ? customDataInner.find((cat) => cat.category === selectedCategory)?.items || [] : customDataInner.flatMap((cat) => cat.items);
                     const selectedProduction = values.items[index].itemCode;
-                    const filteredCategories = selectedProduction ? DataInner.filter((cat) => cat.items.some((a) => a.code === selectedProduction)) : DataInner.flatMap((cat) => cat);
+                    const filteredCategories = selectedProduction ? customDataInner.filter((cat) => cat.items.some((a) => a.code === selectedProduction)) : customDataInner;
 
                     return (
                       <div key={index} className="container-flex">
@@ -143,7 +192,7 @@ export default function FormCountStock({ setDataTable, dataRows, setDataRows, on
                               const selectedItemCode = e.target.value;
                               setFieldValue(`items[${index}].itemCode`, selectedItemCode);
 
-                              const matchedCategory = DataInner.find((cat) => cat.items.some((item) => item.code === selectedItemCode));
+                              const matchedCategory = customDataInner.find((cat) => cat.items.some((item) => item.code === selectedItemCode));
                               if (matchedCategory) {
                                 setFieldValue(`items[${index}].category`, matchedCategory.category);
                               }

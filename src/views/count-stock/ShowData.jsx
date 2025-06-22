@@ -52,7 +52,6 @@ export default function ShowData({ dataTable, exportExcelFile, onDeleteItem }) {
           </button>
         </div>
       </div>
-      {console.log("currentData", currentData)}
       <div className="overflow-x-auto">
         <table className="min-w-full table-fixed" style={{ marginTop: "10px" }}>
           <thead>

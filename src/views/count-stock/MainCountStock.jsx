@@ -384,7 +384,6 @@ export default function MainCountStock() {
 
     // reset ค่าใน dataRows
     const newDataRows = { ...dataRows };
-    console.log("rowIndex", rowIndex);
 
     const resetRow = (rows) =>
       rows.map((row) => {
